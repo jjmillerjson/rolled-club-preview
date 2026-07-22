@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<!--
+  ROLLED CLUB CARD — LAUNCH EMAIL 01: "Welcome to the Club"  (DARK-FIRST v4)
+  Nori #00392c bg + wasabi/cream text to defeat Gmail dark-mode force-inversion.
+  v4 fixes (JJ feedback on the v3 inbox test):
+   - Header photo: explicit width+height so Gmail can't stretch the aspect (was squished).
+   - Heading: baked in REAL Gelica Bold wasabi (hero-welcome-wasabi.png) — no web-font fallback.
+   - Stamps: solid wasabi fish (wasabi-fish.png) + muted ghost (wasabi-fish-ghost.png).
+   - CTA: baked as a wasabi image button (btn-open-card.png) so dark mode can't invert the fill.
+  Only body copy stays live text (cream/wasabi survives dark mode fine).
+  v5 (14 Jul 2026): "everyone starts on 3 stamps" — copy now reads three stamps / 5 to go,
+  and the card art is the static 3-of-8 face (cards/card-standard-3.png). Trigger: the
+  customer's lifetime stamp count crosses 3 (backend first_visit webhook). Merge tokens:
+  {contact.firstName|mate}, {email.unsubscribe} (me&u appends the unsubscribe footer).
+-->
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="color-scheme" content="dark" />
+<meta name="supported-color-schemes" content="dark" />
+<title>Welcome to the Club</title>
+<!--[if mso]><noscript><xml><o:OfficeDocumentSettings><o:PixelsPerInch>96</o:PixelsPerInch></o:OfficeDocumentSettings></xml></noscript><![endif]-->
+<style>
+  :root{color-scheme:dark;supported-color-schemes:dark;}
+  body,table,td,a{-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%;}
+  table,td{mso-table-lspace:0pt;mso-table-rspace:0pt;}
+  img{-ms-interpolation-mode:bicubic;border:0;line-height:100%;outline:none;text-decoration:none;display:block;}
+  body{margin:0;padding:0;width:100%!important;background:#002019;}
+  a{color:#d4fb6f;}
+  @media only screen and (max-width:600px){
+    .container{width:100%!important;}
+    .px{padding-left:22px!important;padding-right:22px!important;}
+    .hero-img{width:270px!important;height:auto!important;}
+    .stampcell{padding:3px!important;}
+    .stampfish{width:26px!important;height:auto!important;}
+  }
+</style>
+</head>
+<body style="margin:0;padding:0;background:#002019;">
+  <!-- ── Preheader: the one crafted line shown in the inbox preview ── -->
+  <div style="display:none;max-height:0;overflow:hidden;mso-hide:all;font-size:1px;line-height:1px;color:#002019;opacity:0;">
+    You're in the Club — here's your first stamp, and what's next.
+  </div>
+  <!-- ── Preheader padding: invisible spacers so ONLY the line above previews ── -->
+  <div style="display:none;max-height:0;overflow:hidden;mso-hide:all;font-size:1px;line-height:1px;color:#002019;opacity:0;">
+    &zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;
+  </div>
+
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#002019;">
+    <tr>
+      <td align="center" style="padding:26px 12px 40px;">
+
+        <table role="presentation" class="container" width="600" cellpadding="0" cellspacing="0" style="width:600px;max-width:600px;background:#00392c;border-radius:20px;overflow:hidden;border:1px solid rgba(212,251,111,.14);">
+
+          <!-- ── Header: sushi banner (3:1 — sane aspect Gmail won't stretch) ── -->
+          <tr>
+            <td style="padding:0;font-size:0;line-height:0;">
+              <img src="https://club.eatrolled.com/email/sushi-banner.jpg" width="600" height="200" alt="Rolled — Aussie-style sushi" style="display:block;width:100%;max-width:600px;height:auto;" />
+            </td>
+          </tr>
+
+          <!-- ── Wordmark: wasabi rolled on Nori ── -->
+          <tr>
+            <td align="center" style="padding:24px 24px 8px;background:#00392c;">
+              <img src="https://club.eatrolled.com/email/wordmark-wasabi.png" width="150" height="39" alt="rolled" style="display:block;width:150px;max-width:55%;height:auto;" />
+            </td>
+          </tr>
+
+          <!-- ── Hero: baked Gelica Bold wasabi heading ── -->
+          <tr>
+            <td class="px" style="padding:20px 40px 2px;">
+              <img class="hero-img" src="https://club.eatrolled.com/email/hero-welcome-wasabi.png" width="300" height="126" alt="Welcome to the Club" style="display:block;width:300px;max-width:80%;height:auto;" />
+            </td>
+          </tr>
+          <tr>
+            <td class="px" style="padding:16px 40px 0;font-family:'Manrope',Helvetica,Arial,sans-serif;font-size:18px;line-height:24px;color:#d4fb6f;font-weight:700;">
+              G'day, {contact.firstName|mate} 👋
+            </td>
+          </tr>
+          <tr>
+            <td class="px" style="padding:8px 40px 4px;font-family:'Manrope',Helvetica,Arial,sans-serif;font-size:16px;line-height:25px;color:#eaf3e4;">
+              You're officially rolling, with <strong style="color:#d4fb6f;">three stamps</strong> already in the bag. Only 5 to go until you get <strong style="color:#d4fb6f;">free sushi</strong>. You beauty.
+            </td>
+          </tr>
+
+          <!-- ── Little Club Card (static 3-of-8; matches the in-app card face, dark-mode-proof). Swap back to an animated GIF here if a 3-stamp club-card-welcome-anim.gif is re-rendered. ── -->
+          <tr>
+            <td align="center" class="px" style="padding:24px 40px 4px;">
+              <a href="https://club.eatrolled.com" style="text-decoration:none;display:block;"><img src="https://club.eatrolled.com/email/cards/card-standard-3.png" width="380" height="257" alt="Your Rolled Club Card — 3 of 8 stamps" style="display:block;width:100%;max-width:380px;height:auto;margin:0 auto;" /></a>
+            </td>
+          </tr>
+          <tr>
+            <td align="center" class="px" style="padding:6px 40px 4px;font-family:'Manrope',Helvetica,Arial,sans-serif;font-size:14px;line-height:20px;color:#cfe6d5;">
+              Get a stamp every visit. <strong style="color:#d4fb6f;">See ya tomorrow!</strong>
+            </td>
+          </tr>
+
+          <!-- ── CTA: baked wasabi image button (dark-mode-proof) ── -->
+          <tr>
+            <td align="center" style="padding:26px 40px 22px;">
+              <a href="https://club.eatrolled.com" style="text-decoration:none;display:inline-block;">
+                <img src="https://club.eatrolled.com/email/btn-open-card.png" width="230" height="60" alt="Open my card" style="display:block;width:230px;height:auto;" />
+              </a>
+            </td>
+          </tr>
+          <tr>
+            <td align="center" class="px" style="padding:0 40px 32px;font-family:'Manrope',Helvetica,Arial,sans-serif;font-size:13px;line-height:20px;color:#9fbcae;">
+              Add it to your phone's home screen so it's always one tap away.
+            </td>
+          </tr>
+
+          <!-- ── Footer ── -->
+          <tr>
+            <td style="background:#001a14;padding:22px 40px 26px;">
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr><td align="left" valign="middle" style="font-family:'Manrope',Helvetica,Arial,sans-serif;font-size:13px;line-height:20px;color:#cfe0d6;font-weight:600;"><a href="https://eatrolled.com" style="color:#cfe0d6;text-decoration:none;">Rolled&nbsp; | &nbsp;Aussie-Style Sushi</a></td><td align="right" valign="middle" style="white-space:nowrap;"><a href="https://instagram.com/eatrolled" style="text-decoration:none;"><img src="https://club.eatrolled.com/email/ig-icon.png?v=3" width="22" height="22" alt="Instagram" style="border:0;display:inline-block;vertical-align:middle;" /></a>&nbsp;&nbsp;&nbsp;<a href="https://www.tiktok.com/@eatrolled" style="text-decoration:none;"><img src="https://club.eatrolled.com/email/tiktok-icon.png?v=3" width="22" height="22" alt="TikTok" style="border:0;display:inline-block;vertical-align:middle;" /></a></td></tr></table>
+              <div style="font-family:'Manrope',Helvetica,Arial,sans-serif;font-size:11px;line-height:18px;color:#6f9587;margin-top:11px;">
+                <a href="https://club.eatrolled.com/privacy" style="color:#8fb3a4;">Privacy</a> &nbsp;·&nbsp;
+                privacy@eatrolled.com<br />
+                ROLLED LIMITED · Company No. 15609887 · ICO ZB945189
+              </div>
+            </td>
+          </tr>
+
+        </table>
+
+      </td>
+    </tr>
+  </table>
+</body>
+</html>

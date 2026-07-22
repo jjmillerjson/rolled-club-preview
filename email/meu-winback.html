@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<!--
+  ══ me&u PASTE-READY version — Templates → Code Your Own → PASTE (never URL-import). Webhook trigger: rfm_inactive. ══
+  ROLLED CLUB CARD — LAUNCH EMAIL 04: "Your free sushi awaits"  (DARK-FIRST v1, win-back)
+  Dark-first Nori + wasabi/cream. Baked hero + reused Open-my-card button.
+  Reward shown as wasabi TEXT on a dark tile (a wasabi fill would invert in Gmail).
+  Copy PRESERVED. Trigger: at-risk / churn flag. Merge: {contact.firstName|mate}, {contact.stampCount|0}, {contact.tierreward|2 Free Rolls}, {email.unsubscribe}.
+-->
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="color-scheme" content="dark" />
+<meta name="supported-color-schemes" content="dark" />
+<title>Your free sushi awaits</title>
+<!--[if mso]><noscript><xml><o:OfficeDocumentSettings><o:PixelsPerInch>96</o:PixelsPerInch></o:OfficeDocumentSettings></xml></noscript><![endif]-->
+<style>
+  :root{color-scheme:dark;supported-color-schemes:dark;}
+  body,table,td,a{-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%;}
+  table,td{mso-table-lspace:0pt;mso-table-rspace:0pt;}
+  img{-ms-interpolation-mode:bicubic;border:0;line-height:100%;outline:none;text-decoration:none;display:block;}
+  body{margin:0;padding:0;width:100%!important;background:#002019;}
+  a{color:#d4fb6f;}
+  @media only screen and (max-width:600px){
+    .container{width:100%!important;}
+    .px{padding-left:22px!important;padding-right:22px!important;}
+    .hero-img{width:280px!important;height:auto!important;}
+  }
+</style>
+</head>
+<body style="margin:0;padding:0;background:#002019;">
+  <div style="display:none;max-height:0;overflow:hidden;mso-hide:all;font-size:1px;line-height:1px;color:#002019;opacity:0;">
+    Your stamps are still here — come grab your free sushi.
+  </div>
+  <div style="display:none;max-height:0;overflow:hidden;mso-hide:all;font-size:1px;line-height:1px;color:#002019;opacity:0;">
+    &zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;
+  </div>
+
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#002019;">
+    <tr>
+      <td align="center" style="padding:26px 12px 40px;">
+        <table role="presentation" class="container" width="600" cellpadding="0" cellspacing="0" style="width:600px;max-width:600px;background:#00392c;border-radius:20px;overflow:hidden;border:1px solid rgba(212,251,111,.14);">
+
+          <!-- Header -->
+          <tr><td style="padding:0;font-size:0;line-height:0;"><img src="https://club.eatrolled.com/email/sushi-banner.jpg" width="600" height="200" alt="Rolled — Aussie-style sushi" style="display:block;width:100%;max-width:600px;height:auto;" /></td></tr>
+          <tr><td align="center" style="padding:24px 24px 4px;background:#00392c;"><img src="https://club.eatrolled.com/email/wordmark-wasabi.png" width="150" height="39" alt="rolled" style="display:block;width:150px;max-width:55%;height:auto;" /></td></tr>
+
+          <!-- Hero -->
+          <tr><td class="px" style="padding:16px 40px 2px;"><img class="hero-img" src="https://club.eatrolled.com/email/hero-winback-wasabi.png" width="340" height="110" alt="Your free sushi awaits" style="display:block;width:340px;max-width:88%;height:auto;" /></td></tr>
+          <tr>
+            <td class="px" style="padding:16px 40px 0;font-family:'Manrope',Helvetica,Arial,sans-serif;font-size:18px;line-height:24px;color:#d4fb6f;font-weight:700;">
+              It's got your name on it, {contact.firstName|mate} 👀
+            </td>
+          </tr>
+          <tr>
+            <td class="px" style="padding:8px 40px 4px;font-family:'Manrope',Helvetica,Arial,sans-serif;font-size:16px;line-height:25px;color:#eaf3e4;">
+              Your stamps are waiting for their mates! Swing past Rolled and get a stamp, and you'll be even closer to free sushi.
+            </td>
+          </tr>
+
+          <!-- Personalised Club Card — their ACTUAL tier + stamp count (matrix: card-{tier}-{stamps}.png) -->
+          <tr>
+            <td align="center" class="px" style="padding:22px 40px 4px;">
+              <a href="https://club.eatrolled.com" style="text-decoration:none;display:block;"><img src="https://club.eatrolled.com/email/cards/card-{contact.tier|standard}-{contact.stampCount|0}.png?v=3" width="380" height="257" alt="Your Rolled Club Card — {contact.stampCount|0} of 8 stamps" style="display:block;width:100%;max-width:380px;height:auto;margin:0 auto;" /></a>
+            </td>
+          </tr>
+          <tr>
+            <td align="center" class="px" style="padding:8px 40px 4px;font-family:'Manrope',Helvetica,Arial,sans-serif;font-size:15px;line-height:22px;color:#eaf3e4;">
+              You're on <strong style="color:#d4fb6f;">{contact.stampCount|0} / 8 stamps</strong>. Fill it up and your <strong style="color:#d4fb6f;">{contact.tierreward|2 Free Rolls}</strong> is yours.
+            </td>
+          </tr>
+
+          <!-- CTA -->
+          <tr>
+            <td align="center" style="padding:26px 40px 10px;">
+              <a href="https://club.eatrolled.com" style="text-decoration:none;display:inline-block;"><img src="https://club.eatrolled.com/email/btn-open-card.png" width="230" height="60" alt="Open my card" style="display:block;width:230px;height:auto;" /></a>
+            </td>
+          </tr>
+          <tr>
+            <td align="center" class="px" style="padding:2px 40px 30px;font-family:'Manrope',Helvetica,Arial,sans-serif;font-size:13px;line-height:20px;color:#9fbcae;">
+              Every time you roll up, you get closer to free sushi. How good?!
+            </td>
+          </tr>
+
+          <!-- Footer -->
+          <tr>
+            <td style="background:#001a14;padding:22px 40px 26px;">
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr><td align="left" valign="middle" style="font-family:'Manrope',Helvetica,Arial,sans-serif;font-size:13px;line-height:20px;color:#cfe0d6;font-weight:600;"><a href="https://eatrolled.com" style="color:#cfe0d6;text-decoration:none;">Rolled&nbsp; | &nbsp;Aussie-Style Sushi</a></td><td align="right" valign="middle" style="white-space:nowrap;"><a href="https://instagram.com/eatrolled" style="text-decoration:none;"><img src="https://club.eatrolled.com/email/ig-icon.png?v=3" width="22" height="22" alt="Instagram" style="border:0;display:inline-block;vertical-align:middle;" /></a>&nbsp;&nbsp;&nbsp;<a href="https://www.tiktok.com/@eatrolled" style="text-decoration:none;"><img src="https://club.eatrolled.com/email/tiktok-icon.png?v=3" width="22" height="22" alt="TikTok" style="border:0;display:inline-block;vertical-align:middle;" /></a></td></tr></table>
+              <div style="font-family:'Manrope',Helvetica,Arial,sans-serif;font-size:11px;line-height:18px;color:#6f9587;margin-top:11px;">
+                <a href="https://club.eatrolled.com/privacy" style="color:#8fb3a4;">Privacy</a> &nbsp;·&nbsp;
+                privacy@eatrolled.com<br />
+                ROLLED LIMITED · Company No. 15609887 · ICO ZB945189 · <a href="{email.unsubscribe}" style="color:#8fb3a4;text-decoration:none;">Unsubscribe</a>
+              </div>
+            </td>
+          </tr>
+
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>

@@ -1,0 +1,6 @@
+# Dynamic QR redirect proxy → Railway (302 on CF Pages; re-point printed QRs, no reprint)
+/r/*  https://rolled-club-card-production.up.railway.app/r/:splat  302
+
+# SPA fallback (CF Pages serves real files first — terms.html/privacy.html incl. pretty
+# URLs — so this only catches app routes that aren't files)
+/*  /index.html  200
