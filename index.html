@@ -1338,6 +1338,17 @@
       25%  { opacity: 1; }
       100% { transform: translate(var(--dx,0), var(--dy,0)) scale(1); opacity: 0; }
     }
+    /* faux preview — gold shimmering reward value */
+    .faux-gold {
+      font-family: var(--fd); font-weight: 800;
+      background: linear-gradient(92deg, #d9a441 0%, #fff2c4 22%, #f3cd6b 42%, #ffffff 50%, #f3cd6b 58%, #fff2c4 78%, #d9a441 100%);
+      background-size: 220% auto;
+      -webkit-background-clip: text; background-clip: text;
+      -webkit-text-fill-color: transparent; color: transparent;
+      animation: fauxGoldShimmer 3.2s linear infinite;
+    }
+    @keyframes fauxGoldShimmer { to { background-position: 220% center; } }
+    @media (prefers-reduced-motion: reduce) { .faux-gold { animation: none; } }
     @media (prefers-reduced-motion: reduce) {
       .claim-box--armed { animation: claimAccentPulse 1.6s ease-in-out infinite; }
       .claim-ring, .claim-gleam, .claim-spark { animation: none; opacity: 0; }
@@ -3444,7 +3455,7 @@
              reserved) so the card never grows/elongates when it settles from 8
              back to 2; it just fades to 0 during the celebration so it doesn't
              fight the burst + FREE SUSHI! moment, then fades back in on settle. */null}
-          <div style=${{ fontSize: '11px', color: 'rgba(212,251,111,0.8)', textAlign: 'center', fontFamily: 'var(--fb)', fontWeight: 600, marginBottom: '7px', opacity: phase === 'celebrating' ? 0 : 1, transition: 'opacity 340ms ease-out' }}>Collect 8 stamps and unlock your reward, our shout!</div>
+          <div style=${{ fontSize: '11px', color: 'rgba(212,251,111,0.8)', textAlign: 'center', fontFamily: 'var(--fb)', fontWeight: 600, marginBottom: '7px', opacity: phase === 'celebrating' ? 0 : 1, transition: 'opacity 340ms ease-out' }}>Collect stamps to unlock free sushi</div>
           <div style=${{ fontSize: '11px', color: 'rgba(254,250,240,0.6)', textAlign: 'center', fontFamily: 'var(--fb)', minHeight: '14px' }}>${caption}</div>
           </div>
         </div>
@@ -5412,7 +5423,7 @@
                     </div>
                   `)}
                 </div>
-                <p style=${{ textAlign: 'center', fontSize: '12px', fontFamily: 'var(--fd)', color: 'var(--kewpie-dim)', marginTop: '2px', paddingBottom: '4px', position: 'relative', zIndex: 5 }}>${displayIsReward ? 'Card fully stamped. Claim your reward next visit' : 'Collect 8 stamps and unlock your reward, our shout!'}</p>
+                <p style=${{ textAlign: 'center', fontSize: '12px', fontFamily: 'var(--fd)', color: 'var(--kewpie-dim)', marginTop: '2px', paddingBottom: '4px', position: 'relative', zIndex: 5 }}>${displayIsReward ? 'Card fully stamped. Claim your reward next visit' : 'Collect stamps to unlock free sushi'}</p>
                     </div>
                   </div>
                 </div>
@@ -5481,8 +5492,8 @@
               `}
           ` : html`
             <div style=${{ textAlign: 'center', margin: '12px 0 2px' }}>
-              <p style=${{ fontSize: '10px', letterSpacing: '0.8px', textTransform: 'uppercase', color: 'var(--wasabi)', margin: 0, opacity: 0.9 }}>You'll unlock</p>
-              <p style=${{ fontFamily: 'var(--fd)', fontSize: '32px', lineHeight: 1.05, fontWeight: 800, color: 'var(--kewpie)', margin: '4px 0 0' }}>${currentReward}</p>
+              <p style=${{ fontSize: '10px', letterSpacing: '0.8px', textTransform: 'uppercase', color: 'var(--wasabi)', margin: 0, opacity: 0.9 }}>Collect 8 stamps to unlock</p>
+              <p class="faux-gold" style=${{ fontSize: '32px', lineHeight: 1.05, margin: '4px 0 0' }}>${currentReward}</p>
             </div>
             ${/* faux: tier progression removed */null}
             ${/* faux: food-purchase note removed */null}
