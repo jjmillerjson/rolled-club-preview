@@ -1356,6 +1356,21 @@
       50%      { box-shadow: 0 0 16px 3px rgba(212,251,111,0.3), 0 3px 18px rgba(0,0,0,0.22); }
     }
     @media (prefers-reduced-motion: reduce) { .faux-qr-soft { animation: none; box-shadow: 0 0 10px 1px rgba(212,251,111,0.2), 0 3px 18px rgba(0,0,0,0.22); } }
+    /* faux preview — scanner sweep line, signals "this gets scanned" */
+    .qr-scanline {
+      position: absolute; left: 9%; right: 9%; top: 14%; height: 2px; z-index: 2;
+      background: linear-gradient(90deg, transparent, rgba(212,251,111,0.95), transparent);
+      box-shadow: 0 0 8px 1px rgba(212,251,111,0.6);
+      border-radius: 2px; pointer-events: none;
+      animation: qrScan 2.2s ease-in-out infinite;
+    }
+    @keyframes qrScan {
+      0%   { top: 14%; opacity: 0; }
+      12%  { opacity: 1; }
+      88%  { opacity: 1; }
+      100% { top: 86%; opacity: 0; }
+    }
+    @media (prefers-reduced-motion: reduce) { .qr-scanline { display: none; } }
     @media (prefers-reduced-motion: reduce) {
       .claim-box--armed { animation: claimAccentPulse 1.6s ease-in-out infinite; }
       .claim-ring, .claim-gleam, .claim-spark { animation: none; opacity: 0; }
@@ -2351,6 +2366,7 @@
       return html`
         <div class="claim-box faux-qr-soft" style=${{ margin: '0 auto' }}>
           <canvas ref=${canvasRef} style=${{ display: 'block', borderRadius: '4px' }} />
+          <div class="qr-scanline"></div>
         </div>
       `;
     }
@@ -5504,7 +5520,8 @@
             ${!fauxCollected ? html`
               <div style=${{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: '12px', cursor: 'pointer' }} onClick=${fauxCollect}>
                 <${FauxCollectQR} loyaltyId=${loyaltyId} />
-                <p style=${{ marginTop: '16px', fontSize: '13.5px', fontWeight: 700, color: 'var(--kewpie)', fontFamily: 'var(--fb)' }}>scan to collect a stamp!</p>
+                <p style=${{ marginTop: '18px', fontSize: '15px', fontWeight: 800, color: 'var(--kewpie)', fontFamily: 'var(--fb)' }}>Show this to a team member</p>
+                <p style=${{ marginTop: '3px', fontSize: '12.5px', fontWeight: 500, color: 'var(--kewpie-muted)', fontFamily: 'var(--fb)' }}>they'll scan it to add your stamp</p>
               </div>
             ` : html`
               <button class="scan-cta" style=${{ marginTop: '24px' }} onClick=${() => onSignUp && onSignUp()}>Sign up to keep →</button>
