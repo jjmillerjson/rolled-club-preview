@@ -1349,6 +1349,13 @@
     }
     @keyframes fauxGoldShimmer { to { background-position: 220% center; } }
     @media (prefers-reduced-motion: reduce) { .faux-gold { animation: none; } }
+    /* faux preview — calm QR glow (dialed down from the claim "hum") */
+    .faux-qr-soft { animation: fauxQrBreathe 3.6s ease-in-out infinite; }
+    @keyframes fauxQrBreathe {
+      0%, 100% { box-shadow: 0 0 6px 0 rgba(212,251,111,0.16), 0 3px 18px rgba(0,0,0,0.22); }
+      50%      { box-shadow: 0 0 16px 3px rgba(212,251,111,0.3), 0 3px 18px rgba(0,0,0,0.22); }
+    }
+    @media (prefers-reduced-motion: reduce) { .faux-qr-soft { animation: none; box-shadow: 0 0 10px 1px rgba(212,251,111,0.2), 0 3px 18px rgba(0,0,0,0.22); } }
     @media (prefers-reduced-motion: reduce) {
       .claim-box--armed { animation: claimAccentPulse 1.6s ease-in-out infinite; }
       .claim-ring, .claim-gleam, .claim-spark { animation: none; opacity: 0; }
@@ -2342,13 +2349,8 @@
         }
       }, [loyaltyId]);
       return html`
-        <div class="claim-stage">
-          <div class="claim-ring"></div>
-          <div class="claim-box claim-box--armed">
-            <div class="claim-gleam"></div>
-            <canvas ref=${canvasRef} style=${{ display: 'block', borderRadius: '4px' }} />
-          </div>
-          ${CLAIM_SPARKS.map((p, i) => html`<span class="claim-spark" key=${i} style=${{ '--dx': p[0] + 'px', '--dy': p[1] + 'px', animationDelay: (0.08 + i * 0.012) + 's' }}></span>`)}
+        <div class="claim-box faux-qr-soft" style=${{ margin: '0 auto' }}>
+          <canvas ref=${canvasRef} style=${{ display: 'block', borderRadius: '4px' }} />
         </div>
       `;
     }
