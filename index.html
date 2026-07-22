@@ -1386,6 +1386,19 @@
     .faux-cel-title { font-family: var(--fd); font-size: 30px; font-weight: 800; color: var(--wasabi); margin-top: 14px; opacity: 0; transform: scale(0.6); animation: rcTitle 0.6s cubic-bezier(0.34,1.56,0.64,1) 0.3s forwards; text-shadow: 0 2px 20px rgba(212,251,111,0.3); }
     .faux-cel-sub { font-family: var(--fb); font-size: 11px; font-weight: 800; letter-spacing: 1.2px; text-transform: uppercase; color: var(--kewpie-muted); margin-top: 6px; opacity: 0; animation: rcUp 0.4s ease 0.55s forwards; }
     @media (prefers-reduced-motion: reduce) { .faux-cel-hero, .faux-cel-fish, .faux-cel-spark, .faux-cel-bloom, .faux-cel-title, .faux-cel-sub { animation-duration: 0.01ms !important; animation-delay: 0s !important; opacity: 1 !important; } }
+    /* faux preview — focused "keep it" takeover (Option A) */
+    .faux-keepover { position: fixed; inset: 0; z-index: 210; display: flex; align-items: center; justify-content: center; padding: 32px 26px; text-align: center; background: radial-gradient(120% 80% at 50% 42%, #0a5442 0%, #00392c 52%, #002018 100%); animation: fauxKeepIn 0.45s ease both; }
+    .faux-keepover-inner { display: flex; flex-direction: column; align-items: center; max-width: 340px; width: 100%; }
+    .fko-eyebrow { font-family: var(--fb); font-size: 11px; font-weight: 800; letter-spacing: 1.4px; text-transform: uppercase; color: var(--wasabi); margin-bottom: 18px; }
+    .fko-fish { display: flex; gap: 10px; margin-bottom: 22px; }
+    .fko-fish > div { width: 46px; height: 30px; }
+    .fko-fish svg { width: 100%; height: auto; display: block; }
+    .fko-title { font-family: var(--fd); font-size: 40px; line-height: 1.02; font-weight: 800; color: var(--kewpie); text-wrap: balance; text-shadow: 0 2px 20px rgba(0,0,0,0.3); margin: 0; }
+    .fko-sub { font-family: var(--fb); font-size: 14.5px; line-height: 1.5; color: var(--kewpie-dim); margin: 12px 0 30px; max-width: 300px; }
+    .fko-cta { width: 100%; max-width: 320px; padding: 18px; border: none; border-radius: 15px; background: var(--wasabi); color: #123a1c; font-family: var(--fb); font-size: 18px; font-weight: 800; cursor: pointer; box-shadow: 0 10px 30px -8px rgba(212,251,111,0.7); animation: fkoPulse 1.9s ease-in-out infinite; }
+    .fko-cta:active { transform: scale(0.98); }
+    @keyframes fkoPulse { 0%,100% { transform: scale(1); box-shadow: 0 10px 30px -8px rgba(212,251,111,0.55); } 50% { transform: scale(1.035); box-shadow: 0 16px 42px -6px rgba(212,251,111,0.95); } }
+    @media (prefers-reduced-motion: reduce) { .fko-cta { animation: none; } .faux-keepover { animation: none; } }
     @media (prefers-reduced-motion: reduce) {
       .claim-box--armed { animation: claimAccentPulse 1.6s ease-in-out infinite; }
       .claim-ring, .claim-gleam, .claim-spark { animation: none; opacity: 0; }
@@ -5558,14 +5571,7 @@
                 <p style=${{ marginTop: '18px', fontSize: '15px', fontWeight: 800, color: 'var(--kewpie)', fontFamily: 'var(--fb)' }}>Show this to staff</p>
                 <p style=${{ marginTop: '3px', fontSize: '12.5px', fontWeight: 500, color: 'var(--kewpie-muted)', fontFamily: 'var(--fb)' }}>they'll scan it to add your stamp</p>
               </div>
-            ` : html`
-              <div class="faux-keep" style=${{ marginTop: '22px', display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}>
-                <div style=${{ fontSize: '11px', fontWeight: 800, letterSpacing: '1.2px', textTransform: 'uppercase', color: 'var(--wasabi)', marginBottom: '8px' }}>Stamp collected</div>
-                <div style=${{ fontFamily: 'var(--fd)', fontSize: '26px', fontWeight: 800, lineHeight: 1.05, color: 'var(--kewpie)', marginBottom: '8px' }}>Don't lose your stamps!</div>
-                <p style=${{ fontSize: '13.5px', lineHeight: 1.45, color: 'var(--kewpie-muted)', maxWidth: '270px', margin: '0 0 18px' }}>You've racked up 3 — lock them in and keep rolling towards free sushi.</p>
-                <button class="scan-cta" style=${{ marginTop: 0 }} onClick=${() => onSignUp && onSignUp()}>Keep my stamps →</button>
-              </div>
-            `}
+            ` : null}
           `}
               </div>
             ` : centredSpecial ? html`
@@ -5649,6 +5655,18 @@
               <div class="scan-overlay-card">
                 <${QRCodeDisplay} loyaltyId=${loyaltyId} />
                 <button class="celebrate-dismiss" style=${{ marginTop: '22px' }} onClick=${() => setShowScanQR(false)}>Cancel</button>
+              </div>
+            </div>
+          ` : null}
+
+          ${fauxCollected ? html`
+            <div class="faux-keepover">
+              <div class="faux-keepover-inner">
+                <div class="fko-eyebrow">You're on 3 stamps</div>
+                <div class="fko-fish"><div><${SoyFishMini} filled=${true} /></div><div><${SoyFishMini} filled=${true} /></div><div><${SoyFishMini} filled=${true} /></div></div>
+                <h2 class="fko-title">Don't lose your stamps!</h2>
+                <p class="fko-sub">They're not saved yet — lock them in and keep rolling towards free sushi.</p>
+                <button class="fko-cta" onClick=${() => onSignUp && onSignUp()}>Keep my stamps →</button>
               </div>
             </div>
           ` : null}
