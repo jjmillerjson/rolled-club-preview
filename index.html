@@ -1371,6 +1371,10 @@
       100% { top: 86%; opacity: 0; }
     }
     @media (prefers-reduced-motion: reduce) { .qr-scanline { display: none; } }
+    /* faux preview — post-scan "don't lose your stamps" moment */
+    .faux-keep { animation: fauxKeepIn 0.5s cubic-bezier(0.2,0.7,0.3,1) both; }
+    @keyframes fauxKeepIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+    @media (prefers-reduced-motion: reduce) { .faux-keep { animation: none; } }
     @media (prefers-reduced-motion: reduce) {
       .claim-box--armed { animation: claimAccentPulse 1.6s ease-in-out infinite; }
       .claim-ring, .claim-gleam, .claim-spark { animation: none; opacity: 0; }
@@ -5524,7 +5528,12 @@
                 <p style=${{ marginTop: '3px', fontSize: '12.5px', fontWeight: 500, color: 'var(--kewpie-muted)', fontFamily: 'var(--fb)' }}>they'll scan it to add your stamp</p>
               </div>
             ` : html`
-              <button class="scan-cta" style=${{ marginTop: '24px' }} onClick=${() => onSignUp && onSignUp()}>Sign up to keep →</button>
+              <div class="faux-keep" style=${{ marginTop: '22px', display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}>
+                <div style=${{ fontSize: '11px', fontWeight: 800, letterSpacing: '1.2px', textTransform: 'uppercase', color: 'var(--wasabi)', marginBottom: '8px' }}>Stamp collected</div>
+                <div style=${{ fontFamily: 'var(--fd)', fontSize: '26px', fontWeight: 800, lineHeight: 1.05, color: 'var(--kewpie)', marginBottom: '8px' }}>Don't lose your stamps!</div>
+                <p style=${{ fontSize: '13.5px', lineHeight: 1.45, color: 'var(--kewpie-muted)', maxWidth: '270px', margin: '0 0 18px' }}>You've got 3 — sign up now to keep them and get your free sushi. You beauty!</p>
+                <button class="scan-cta" style=${{ marginTop: 0 }} onClick=${() => onSignUp && onSignUp()}>Sign up to keep my stamps →</button>
+              </div>
             `}
           `}
               </div>
