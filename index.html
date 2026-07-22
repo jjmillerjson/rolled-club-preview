@@ -3274,7 +3274,7 @@
       // Keep the empty-state caption while the user is still typing (phase
       // stays 'idle' until the 800ms debounce elapses). Avoids a confusing
       // mid-type flash to '0/8 stamps' before the animation actually fires.
-      if (phase === 'idle') caption = 'Roll up for free sushi';
+      if (phase === 'idle') caption = keepFlow ? `Your Club Card. You're starting with ${bonusStamps} stamps on us.` : 'Roll up for free sushi';
       else if (phase === 'settled') caption = `Your Club Card. You're starting with ${bonusStamps} stamps on us.`;
       else if (phase === 'celebrating') caption = '8/8 \u2014 free sushi!';
       else caption = `${stampCount}/8 stamps`;
