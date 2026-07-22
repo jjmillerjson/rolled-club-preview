@@ -3069,6 +3069,7 @@
     // Install guide bottom-sheet. Leads with the real app icon (the payoff), then
     // the right path per platform. Reused by the Home auto-nudge + Profile entry.
     function InstallGuide({ onClose }) {
+      return null; // faux preview: suppress PWA install / Add-to-Home-Screen sheet entirely
       const ios = pwaIsIOS();
       const inApp = ios && pwaInAppBrowser();
       const [canPrompt, setCanPrompt] = useState(!!deferredInstallPrompt);
@@ -3195,7 +3196,7 @@
     // 2 stamps they'll actually receive on signup. Endowed-progress effect:
     // customer sees their name on a card BEFORE submitting + an ambitious
     // preview of the full reward state, then a concrete starter state.
-    function SignupPreviewCard({ firstName, handleSettled, triggerNow, bonusStamps = 2 }) {
+    function SignupPreviewCard({ firstName, handleSettled, triggerNow, bonusStamps = 2, keepFlow }) {
       const trimmed = (firstName || '').trim();
       const hasName = trimmed.length > 0;
       // Phase: 'idle' = no name yet (placeholder card)
@@ -3203,7 +3204,7 @@
       //        'celebrating' = brief celebration when 8th lands
       //        'settled' = card showing the actual 2 starter stamps
       const [phase, setPhase] = useState('idle');
-      const [stampCount, setStampCount] = useState(0);
+      const [stampCount, setStampCount] = useState(keepFlow ? bonusStamps : 0);
       // Wave 14.2 design (RESTORED 2026-05-15 after Wave 16 detour):
       // Trigger: Enter-key on the first-name input only (path (b) below).
       // The earlier 800ms-debounce path (a) was removed 2026-05-15 per JJ
@@ -3230,7 +3231,7 @@
         if (firedRef.current) return;
         firedRef.current = true;
         setPhase('cycling');
-        let current = 0;
+        let current = keepFlow ? bonusStamps : 0;
         const interval = setInterval(() => {
           current += 1;
           setStampCount(current);
@@ -3530,7 +3531,7 @@
       return html`<div ref=${ref} style=${{ position: 'absolute', inset: 0, zIndex: 0, overflow: 'hidden', pointerEvents: 'none' }}></div>`;
     }
 
-    function SignupScreen({ onSignup, onSwitch, showToast, signupSource, claimToken, cardClaimToken, cardClaimInfo, onCardClaimConsumed, onShowPrivacy, marketingCopy, referralCode, referrerName }) {
+    function SignupScreen({ onSignup, onSwitch, showToast, signupSource, claimToken, cardClaimToken, cardClaimInfo, onCardClaimConsumed, onShowPrivacy, marketingCopy, referralCode, referrerName, keepFlow }) {
       const [firstName, setFirstName] = useState('');
       const [email, setEmail] = useState('');
       const [dobDay, setDobDay] = useState('');
@@ -3834,7 +3835,7 @@
           ` : claimContext ? html`
             <div class="auth-hero">You've been sent a card!</div>
             <p class="auth-hero-sub">Join the Club to claim ${(cardClaimInfo && cardClaimInfo.display_name) || 'your special card'} — plus your own Club Card, free.</p>
-          ` : referralCode ? html`
+          ` : keepFlow ? html`<div class="auth-hero">Don't lose your stamps!</div><p class="auth-hero-sub">You've collected 3 — keep them and keep rolling towards free sushi. You beauty!</p>` : referralCode ? html`
             <div class="auth-hero">Three stamps on us!</div>
             <p class="auth-hero-sub">${referrerName || 'A mate'} invited you to the Club, you'll start with 3 bonus stamps. Complete your Club Card and get free sushi. You beauty!</p>
           ` : html`
@@ -3860,7 +3861,7 @@
               </div>
             </div>
           ` : html`
-            <div ref=${cardScrollRef}><${SignupPreviewCard} firstName=${firstName} handleSettled=${handleCardSettled} triggerNow=${enterCount} bonusStamps=${referralCode ? 3 : 2} /></div>
+            <div ref=${cardScrollRef}><${SignupPreviewCard} firstName=${firstName} handleSettled=${handleCardSettled} triggerNow=${enterCount} bonusStamps=${keepFlow ? 3 : referralCode ? 3 : 2} keepFlow=${keepFlow} /></div>
           `}
           ${formExpanded ? html`
           <div class="form-rest">
@@ -5549,7 +5550,7 @@
             </div>
             ${/* faux: tier progression removed */null}
             ${/* faux: food-purchase note removed */null}
-            ${showWalletPrompt ? html`<${WalletButtons} variant="mini" showToast=${showToast} onDismiss=${dismissWallet} />` : null}
+            ${/* faux: no Add-to-Wallet on a not-yet-signed-up card */null}
             ${/* faux: QR shown inline with the claim "hum"; tapping it simulates the staff scan */null}
             ${fauxCelebrating ? html`<div style=${{ marginTop: '14px', display: 'flex', justifyContent: 'center' }}><${FauxCelebration} /></div>` : !fauxCollected ? html`
               <div style=${{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: '12px', cursor: 'pointer' }} onClick=${fauxCollect}>
@@ -6402,6 +6403,10 @@
     // ════════════════════════════════════════════════════════════════
     function App() {
       const [authState, setAuthState] = useState('loading');
+      const [signupKeepFlow, setSignupKeepFlow] = useState(false);
+      useEffect(() => {
+        if (typeof location !== 'undefined' && location.hash === '#keepform') { setTimeout(() => { setSignupKeepFlow(true); setAuthState('signup'); }, 500); }
+      }, []);
       const [tab, setTab] = useState('home');
       const [profile, setProfile] = useState(null);
       const [card, setCard] = useState(null);
@@ -6631,13 +6636,13 @@
       // the visitor claims, joins, logs in, or opts out.
       if (claimStage === 'gate' && cardClaimToken) return html`<div class="app-shell"><${ClaimLinkScreen} token=${cardClaimToken} isSignedIn=${authState === 'verified'} autoClaim=${claimAutoRun} profile=${profile} onJoin=${handleClaimJoin} onLoginInstead=${handleClaimLogin} onDone=${finishClaimFlow} onClaimed=${handleTapClaim} />${ToastEl}</div>`;
       if (authState === 'login') return html`<div class="app-shell"><${LoginScreen} onLogin=${handleLogin} onSwitch=${() => setAuthState('signup')} onForgot=${() => setAuthState('forgot')} showToast=${showToast} />${ToastEl}</div>`;
-      if (authState === 'signup') return html`<div class="app-shell"><${SignupScreen} onSignup=${handleLogin} onSwitch=${() => setAuthState('login')} showToast=${showToast} signupSource=${signupSource} claimToken=${claimToken} cardClaimToken=${cardClaimToken} cardClaimInfo=${cardClaimInfo} onCardClaimConsumed=${handleCardClaimConsumed} onShowPrivacy=${openPrivacy} marketingCopy=${marketingCopy} referralCode=${referralCode} referrerName=${referrerName} />${ToastEl}</div>`;
+      if (authState === 'signup') return html`<div class="app-shell"><${SignupScreen} onSignup=${handleLogin} onSwitch=${() => setAuthState('login')} showToast=${showToast} signupSource=${signupSource} claimToken=${claimToken} cardClaimToken=${cardClaimToken} cardClaimInfo=${cardClaimInfo} onCardClaimConsumed=${handleCardClaimConsumed} onShowPrivacy=${openPrivacy} marketingCopy=${marketingCopy} referralCode=${referralCode} referrerName=${referrerName} keepFlow=${signupKeepFlow} />${ToastEl}</div>`;
       if (authState === 'forgot') return html`<div class="app-shell"><${ForgotPasswordScreen} onBack=${() => setAuthState('login')} />${ToastEl}</div>`;
       if (authState === 'reset') return html`<div class="app-shell"><${ResetPasswordScreen} token=${resetToken} onDone=${() => setAuthState('login')} />${ToastEl}</div>`;
 
       return html`
         <div class="app-shell">
-          ${tab === 'home' ? html`<${HomeScreen} profile=${profile} card=${card} stamps=${stamps} onRefresh=${loadUserData} showToast=${showToast} marketingCopy=${marketingCopy} onNavigate=${setTab} firstRunHint=${justVerified} claimedCardType=${claimedCardType} onFirstRunConsumed=${() => { setJustVerified(false); clearClaimedCardType(); }} onSignUp=${() => setAuthState('signup')} />` : tab === 'collection' ? html`<${CollectionScreen} profile=${profile} showToast=${showToast} />` : tab === 'rewards' ? html`<${RewardsScreen} profile=${profile} showToast=${showToast} />` : html`<${ProfileScreen} profile=${profile} card=${card} onSignOut=${handleSignOut} onShowPrivacy=${openPrivacy} showToast=${showToast} marketingCopy=${marketingCopy} />`}
+          ${tab === 'home' ? html`<${HomeScreen} profile=${profile} card=${card} stamps=${stamps} onRefresh=${loadUserData} showToast=${showToast} marketingCopy=${marketingCopy} onNavigate=${setTab} firstRunHint=${justVerified} claimedCardType=${claimedCardType} onFirstRunConsumed=${() => { setJustVerified(false); clearClaimedCardType(); }} onSignUp=${() => { setSignupKeepFlow(true); setAuthState('signup'); }} />` : tab === 'collection' ? html`<${CollectionScreen} profile=${profile} showToast=${showToast} />` : tab === 'rewards' ? html`<${RewardsScreen} profile=${profile} showToast=${showToast} />` : html`<${ProfileScreen} profile=${profile} card=${card} onSignOut=${handleSignOut} onShowPrivacy=${openPrivacy} showToast=${showToast} marketingCopy=${marketingCopy} />`}
           <nav class="bottom-nav"><button class="nav-tab ${tab === 'home' ? 'active' : ''}" onClick=${() => setTab('home')}><span class="nav-ico"><${IconHome} /></span><span>Home</span></button><button class="nav-tab ${tab === 'rewards' ? 'active' : ''}" onClick=${() => setTab('rewards')}><span class="nav-ico"><${IconRewards} /></span><span>Rewards</span></button><button class="nav-tab ${tab === 'collection' ? 'active' : ''}" onClick=${() => setTab('collection')}><span class="nav-ico"><${IconCollection} /></span><span>Collection</span></button><button class="nav-tab ${tab === 'profile' ? 'active' : ''}" onClick=${() => setTab('profile')}><span class="nav-ico"><${IconProfile} /></span><span>Profile</span></button></nav>
           ${/* Post-verify "You're in the Club, mate!" banner removed per JJ — auto-login lands straight on Home, no overlay. */null}
           ${refBonusPopup ? html`
