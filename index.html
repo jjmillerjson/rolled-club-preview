@@ -5493,18 +5493,18 @@
                 <button class="claim-cancel" onClick=${() => setClubArmed(false)}>Cancel</button>
               `}
           ` : html`
-            <div style=${{ textAlign: 'center', margin: '12px 0 2px' }}>
+            <div style=${{ textAlign: 'center', margin: '22px 0 2px' }}>
               <p style=${{ fontSize: '10px', letterSpacing: '0.8px', textTransform: 'uppercase', color: 'var(--wasabi)', margin: 0, opacity: 0.9 }}>Collect 8 stamps to unlock</p>
-              <p class="faux-gold" style=${{ fontSize: '32px', lineHeight: 1.05, margin: '4px 0 0' }}>${currentReward}</p>
+              <p class="faux-gold" style=${{ fontSize: '34px', lineHeight: 1.05, margin: '4px 0 0' }}>${currentReward}</p>
             </div>
             ${/* faux: tier progression removed */null}
             ${/* faux: food-purchase note removed */null}
             ${showWalletPrompt ? html`<${WalletButtons} variant="mini" showToast=${showToast} onDismiss=${dismissWallet} />` : null}
             ${/* faux: QR shown inline with the claim "hum"; tapping it simulates the staff scan */null}
             ${!fauxCollected ? html`
-              <div style=${{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: '20px', cursor: 'pointer' }} onClick=${fauxCollect}>
+              <div style=${{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: '12px', cursor: 'pointer' }} onClick=${fauxCollect}>
                 <${FauxCollectQR} loyaltyId=${loyaltyId} />
-                <p style=${{ marginTop: '22px', fontSize: '13.5px', fontWeight: 700, color: 'var(--kewpie)', fontFamily: 'var(--fb)' }}>scan to collect a stamp!</p>
+                <p style=${{ marginTop: '16px', fontSize: '13.5px', fontWeight: 700, color: 'var(--kewpie)', fontFamily: 'var(--fb)' }}>scan to collect a stamp!</p>
               </div>
             ` : html`
               <button class="scan-cta" style=${{ marginTop: '24px' }} onClick=${() => onSignUp && onSignUp()}>Sign up to keep →</button>
