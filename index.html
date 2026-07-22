@@ -1821,7 +1821,7 @@
 
   // 3) Fixtures — a brand-new kiosk customer: 2 stamps, no special cards
   var profile = {
-    id: CID, first_name: 'Jordan', last_name: 'Lee', email: 'jordan@example.com',
+    id: CID, first_name: 'Join the club', last_name: '', email: 'jordan@example.com',
     loyalty_id: 'ROLL-J7K2M9', loyalty_tier: 'Standard', tier: 'Standard',
     completed_cards: 0, cards_completed: 0, stamp_count: 2,
     marketing_opt_in: true, sms_opt_in: false, phone: '0400 000 000',
@@ -2321,6 +2321,25 @@
       if (isIOS) return 'app-ios';
       if (/Android/i.test(ua)) return 'app-android';
       return 'unknown';
+    }
+
+    function FauxCollectQR({ loyaltyId }) {
+      const canvasRef = useRef(null);
+      useEffect(() => {
+        if (canvasRef.current && loyaltyId) {
+          QRCode.toCanvas(canvasRef.current, loyaltyId + '|' + detectAppChannel(), { width: 126, margin: 0, color: { dark: '#00392c', light: '#fefaf0' } });
+        }
+      }, [loyaltyId]);
+      return html`
+        <div class="claim-stage">
+          <div class="claim-ring"></div>
+          <div class="claim-box claim-box--armed">
+            <div class="claim-gleam"></div>
+            <canvas ref=${canvasRef} style=${{ display: 'block', borderRadius: '4px' }} />
+          </div>
+          ${CLAIM_SPARKS.map((p, i) => html`<span class="claim-spark" key=${i} style=${{ '--dx': p[0] + 'px', '--dy': p[1] + 'px', animationDelay: (0.08 + i * 0.012) + 's' }}></span>`)}
+        </div>
+      `;
     }
 
     function QRCodeDisplay({ loyaltyId, compact }) {
@@ -4231,7 +4250,7 @@
     // ════════════════════════════════════════════════════════════════
     // HOME SCREEN — Option C Card Layout
     // ════════════════════════════════════════════════════════════════
-    function HomeScreen({ profile, card, stamps, onRefresh, showToast, marketingCopy, onNavigate, firstRunHint, claimedCardType, onFirstRunConsumed }) {
+    function HomeScreen({ profile, card, stamps, onRefresh, showToast, marketingCopy, onNavigate, firstRunHint, claimedCardType, onFirstRunConsumed, onSignUp }) {
       const mCopy = marketingCopy || MARKETING_COPY_FALLBACK;
       const walletDismissKey = profile?.id ? `wallet_dismissed:${profile.id}` : null;
       const [walletDismissed, setWalletDismissed] = useState(() => walletDismissKey && localStorage.getItem(walletDismissKey) === '1');
@@ -4600,6 +4619,19 @@
       // Card Redeemed overlay
       const [showRedeemed, setShowRedeemed] = useState(false);
       const [showScanQR, setShowScanQR] = useState(false);   // Option 2: collecting-state QR opens on demand (keeps the home short, QR bigger when shown)
+      const [fauxCollected, setFauxCollected] = useState(false);   // faux preview: 3rd stamp "collected"
+      const fauxCollect = useCallback(() => {
+        try {
+          if (window.__MOCK_PREVIEW__) {
+            window.__MOCK_PREVIEW__['/api/v1/customers/me/card'] = { card: { card_id: 'faux-card-1', id: 'faux-card-1', stamp_count: 3, status: 'active', card_type: 'standard', started_at: '2026-07-20T10:00:00Z' }, stamps: [ { id: 's1', method: 'signup_bonus' }, { id: 's2', method: 'signup_bonus' }, { id: 's3', method: 'scan' } ] };
+          }
+        } catch (e) {}
+        if (onRefresh) onRefresh();
+        setFauxCollected(true);
+      }, [onRefresh]);
+      useEffect(() => {
+        if (typeof location !== 'undefined' && location.hash === '#collected') { fauxCollect(); }
+      }, []);
       const [redeemedFading, setRedeemedFading] = useState(false);
       const [showTierUp, setShowTierUp] = useState(false);
       const [tierUpFading, setTierUpFading] = useState(false);
@@ -5448,28 +5480,22 @@
                 <button class="claim-cancel" onClick=${() => setClubArmed(false)}>Cancel</button>
               `}
           ` : html`
-            <div style=${{ textAlign: 'center', margin: '6px 0 2px' }}>
-              <p style=${{ fontSize: '9.5px', letterSpacing: '0.8px', textTransform: 'uppercase', color: 'var(--wasabi)', margin: 0, opacity: 0.9 }}>Your reward</p>
-              <p style=${{ fontFamily: 'var(--fd)', fontSize: '16px', color: 'var(--kewpie)', margin: '2px 0 0' }}>${currentReward}</p>
+            <div style=${{ textAlign: 'center', margin: '12px 0 2px' }}>
+              <p style=${{ fontSize: '10px', letterSpacing: '0.8px', textTransform: 'uppercase', color: 'var(--wasabi)', margin: 0, opacity: 0.9 }}>You'll unlock</p>
+              <p style=${{ fontFamily: 'var(--fd)', fontSize: '32px', lineHeight: 1.05, fontWeight: 800, color: 'var(--kewpie)', margin: '4px 0 0' }}>${currentReward}</p>
             </div>
-            ${!isMaxTier ? html`
-              <div class="tier-progress tier-progress--home" role="button" onClick=${() => onNavigate && onNavigate('rewards')} style=${{ marginTop: '8px', width: '100%', maxWidth: '348px', marginLeft: 'auto', marginRight: 'auto', cursor: 'pointer' }}>
-                <div style=${{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '7px' }}>
-                  <span style=${{ fontSize: '12.5px', fontWeight: 700, color: 'var(--kewpie)' }}>${tierCardsLeft} card${tierCardsLeft !== 1 ? 's' : ''} to ${nextTier.name}</span>
-                  <span style=${{ fontSize: '10.5px', fontWeight: 600, color: 'var(--wasabi)', display: 'flex', alignItems: 'center', gap: '3px' }}>View rewards <span style=${{ fontSize: '13px', lineHeight: 1 }}>›</span></span>
-                </div>
-                <div style=${{ display: 'flex', alignItems: 'center', gap: '9px' }}>
-                  <div class="tier-progress-bar" style=${{ flex: 1 }}><div class="tier-progress-fill" style=${{ width: `${Math.max(6, Math.min(100, tierProgress))}%`, background: nextTierColor }}></div></div>
-                  <${TierGoalRoo} color=${nextTierColor} />
-                </div>
-              </div>
-            ` : null}
-            <p style=${{ textAlign: 'center', fontSize: '10px', color: 'var(--kewpie-muted)', marginTop: '8px', marginBottom: '2px', fontFamily: 'var(--fb)' }}>*food purchase required per visit</p>
+            ${/* faux: tier progression removed */null}
+            ${/* faux: food-purchase note removed */null}
             ${showWalletPrompt ? html`<${WalletButtons} variant="mini" showToast=${showToast} onDismiss=${dismissWallet} />` : null}
-            <button class="scan-cta" onClick=${() => setShowScanQR(true)}>
-              <svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 14h3v3M21 14v.01M14 21h.01M17 21h.01M21 21v.01M21 17v.01"/></svg>
-              Scan to collect
-            </button>
+            ${/* faux: QR shown inline with the claim "hum"; tapping it simulates the staff scan */null}
+            ${!fauxCollected ? html`
+              <div style=${{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: '20px', cursor: 'pointer' }} onClick=${fauxCollect}>
+                <${FauxCollectQR} loyaltyId=${loyaltyId} />
+                <p style=${{ marginTop: '22px', fontSize: '13.5px', fontWeight: 700, color: 'var(--kewpie)', fontFamily: 'var(--fb)' }}>scan to collect a stamp!</p>
+              </div>
+            ` : html`
+              <button class="scan-cta" style=${{ marginTop: '24px' }} onClick=${() => onSignUp && onSignUp()}>Sign up to keep →</button>
+            `}
           `}
               </div>
             ` : centredSpecial ? html`
@@ -6542,7 +6568,7 @@
 
       return html`
         <div class="app-shell">
-          ${tab === 'home' ? html`<${HomeScreen} profile=${profile} card=${card} stamps=${stamps} onRefresh=${loadUserData} showToast=${showToast} marketingCopy=${marketingCopy} onNavigate=${setTab} firstRunHint=${justVerified} claimedCardType=${claimedCardType} onFirstRunConsumed=${() => { setJustVerified(false); clearClaimedCardType(); }} />` : tab === 'collection' ? html`<${CollectionScreen} profile=${profile} showToast=${showToast} />` : tab === 'rewards' ? html`<${RewardsScreen} profile=${profile} showToast=${showToast} />` : html`<${ProfileScreen} profile=${profile} card=${card} onSignOut=${handleSignOut} onShowPrivacy=${openPrivacy} showToast=${showToast} marketingCopy=${marketingCopy} />`}
+          ${tab === 'home' ? html`<${HomeScreen} profile=${profile} card=${card} stamps=${stamps} onRefresh=${loadUserData} showToast=${showToast} marketingCopy=${marketingCopy} onNavigate=${setTab} firstRunHint=${justVerified} claimedCardType=${claimedCardType} onFirstRunConsumed=${() => { setJustVerified(false); clearClaimedCardType(); }} onSignUp=${() => setAuthState('signup')} />` : tab === 'collection' ? html`<${CollectionScreen} profile=${profile} showToast=${showToast} />` : tab === 'rewards' ? html`<${RewardsScreen} profile=${profile} showToast=${showToast} />` : html`<${ProfileScreen} profile=${profile} card=${card} onSignOut=${handleSignOut} onShowPrivacy=${openPrivacy} showToast=${showToast} marketingCopy=${marketingCopy} />`}
           <nav class="bottom-nav"><button class="nav-tab ${tab === 'home' ? 'active' : ''}" onClick=${() => setTab('home')}><span class="nav-ico"><${IconHome} /></span><span>Home</span></button><button class="nav-tab ${tab === 'rewards' ? 'active' : ''}" onClick=${() => setTab('rewards')}><span class="nav-ico"><${IconRewards} /></span><span>Rewards</span></button><button class="nav-tab ${tab === 'collection' ? 'active' : ''}" onClick=${() => setTab('collection')}><span class="nav-ico"><${IconCollection} /></span><span>Collection</span></button><button class="nav-tab ${tab === 'profile' ? 'active' : ''}" onClick=${() => setTab('profile')}><span class="nav-ico"><${IconProfile} /></span><span>Profile</span></button></nav>
           ${/* Post-verify "You're in the Club, mate!" banner removed per JJ — auto-login lands straight on Home, no overlay. */null}
           ${refBonusPopup ? html`
